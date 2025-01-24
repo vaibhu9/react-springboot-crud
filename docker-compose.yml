@@ -1,0 +1,53 @@
+services:
+
+  app-using-fetch:
+    container_name: app-using-fetch
+    build: 
+      context: ./app/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - react-spring-crud
+
+
+  app-using-axios:
+    container_name: app-using-axios
+    build: 
+      context: ./appsecond/
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    depends_on:
+      - react-spring-crud
+
+
+  react-spring-crud:
+    container_name: react-spring-crud
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5454:5432"
+    volumes:
+      - employeedata:/var/lib/postgresql/data
+
+volumes:
+  employeedata:
